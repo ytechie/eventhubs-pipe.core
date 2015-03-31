@@ -1,28 +1,34 @@
 ﻿var easyConfig = require('easy-config');
 var Sbus = require('sbus-amqp10');
+var Q = require("q");
 
-config = easyConfig.loadConfig().eventHubConfiguration;
+var config = easyConfig.loadConfig();
+var eventHubConfiguration = config.eventHubConfiguration;
 
-var hub = Sbus.EventHubClient(config.namespace, config.hubName, config.sasKeyName, config.sasKey);
+var hub = Sbus.EventHubClient(eventHubConfiguration.namespace, eventHubConfiguration.hubName, eventHubConfiguration.sasKeyName, eventHubConfiguration.sasKey);
+var outputAdapter = require(config.outputAdapter.module);
 
-hub.getEventProcessor(config.consumerGroup, function (conn_err, processor) {
-    if (conn_err) {
-        console.log('Error connecting: ' + conn_err);
-    } else {
-        processor.set_storage(config.tableStorageName, config.tableStorageKey);
-        processor.init(function(rx_err, partition, payload) {
-            if (rx_err) {
-                console.log('Error initalizing processor:' + rx_err);
-            } else {
-                // Process the JSON payload
-                console.log('JSON Payload: ' + JSON.stringify(payload));
-            }
-        }, function (init_err) {
-            if (init_err) {
-                console.log('Error initalizing:' + init_err);
-            } else {
-                processor.receive();
-            }
-        });
-    }
+outputAdapter.initialize(config.outputAdapter)
+.then(function() {
+    hub.getEventProcessor(eventHubConfiguration.consumerGroup, function (conn_err, processor) {
+        if (conn_err) {
+            console.log('Error connecting: ' + conn_err);
+        } else {
+            processor.set_storage(eventHubConfiguration.tableStorageName, eventHubConfiguration.tableStorageKey);
+            processor.init(function (rx_err, partition, payload) {
+                if (rx_err) {
+                    console.log('Error initalizing processor:' + rx_err);
+                } else {
+                    // Process the JSON payload
+                    outputAdapter.newEvents(payload);
+                }
+            }, function (init_err) {
+                if (init_err) {
+                    console.log('Error initalizing:' + init_err);
+                } else {
+                    processor.receive();
+                }
+            });
+        }
+    });
 });

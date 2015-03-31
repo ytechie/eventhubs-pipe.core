@@ -24,6 +24,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="config\config.json" />
+    <Compile Include="console_output.js" />
+    <Compile Include="eventhubs-pipe.docdb.js" />
     <Compile Include="index.js" />
   </ItemGroup>
   <ItemGroup>
