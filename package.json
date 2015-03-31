@@ -1,0 +1,29 @@
+{
+  "name": "eventhubs-pipe.core",
+  "version": "1.0.0",
+  "description": "Node.js tools for piping data from event hubs to output adapters",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ytechie/eventhubs-pipe.core.git"
+  },
+  "keywords": [
+    "event",
+    "hubs",
+    "documentdb"
+  ],
+  "author": "Microsoft TED",
+  "license": "Apache-2",
+  "bugs": {
+    "url": "https://github.com/ytechie/eventhubs-pipe.core/issues"
+  },
+  "homepage": "https://github.com/ytechie/eventhubs-pipe.core",
+  "dependencies": {
+    "easy-config": "^0.4.4",
+    "sbus-amqp10": "^0.1.0",
+    "node-sbus":  "*"
+  }
+}
