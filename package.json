@@ -26,6 +26,6 @@
     "documentdb-q-promises": "^0.9.3",
     "easy-config": "^0.4.4",
     "q": "^1.2.0",
-    "sbus-amqp10": "^0.1.0"
+    "sbus-amqp10": "^0.1.1"
   }
 }
